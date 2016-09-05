@@ -13,17 +13,29 @@ find_package(catkin REQUIRED
     sparse_bundle_adjustment
     tf
     visualization_msgs
+    pluginlib
 )
 find_package(Eigen REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
 add_definitions(${EIGEN_DEFINITIONS})
 
-catkin_package()
+catkin_package(
+  LIBRARIES karto_spa_plugin
+  )
 
-add_executable(slam_karto src/slam_karto.cpp src/spa_solver.cpp)
-target_link_libraries(slam_karto ${catkin_LIBRARIES})
+add_library(karto_spa_plugin src/spa_solver.cpp)
+add_executable(slam_karto src/slam_karto.cpp)
 
-install(TARGETS slam_karto
+target_link_libraries(karto_spa_plugin ${catkin_LIBRARIES})
+target_link_libraries(slam_karto ${catkin_LIBRARIES} karto_spa_plugin)
+
+install(TARGETS slam_karto karto_spa_plugin
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(FILES spa_plugin.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

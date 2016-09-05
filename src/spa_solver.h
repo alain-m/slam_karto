@@ -28,14 +28,17 @@
 #include <Eigen/Eigen>
 
 #include <sparse_bundle_adjustment/spa2d.h>
+#include "slam_solver.h"
 
 typedef std::vector<karto::Matrix3> CovarianceVector;
 
-class SpaSolver : public karto::ScanSolver
+namespace karto_plugins
+{
+class SPASolver : public karto::SLAMSolver
 {
 public:
-  SpaSolver();
-  virtual ~SpaSolver();
+  SPASolver();
+  virtual ~SPASolver();
 
 public:
   virtual void Clear();
@@ -45,15 +48,19 @@ public:
   virtual void AddNode(karto::Vertex<karto::LocalizedRangeScan>* pVertex);
   virtual void AddConstraint(karto::Edge<karto::LocalizedRangeScan>* pEdge);
 
+  virtual void publishGraphVisualization(visualization_msgs::MarkerArray &marray);
+
+private:
   // Get the underlying graph from SBA
   // return the graph of constraints
   /// x,y -> x',y'   4 floats per connection
   void getGraph(std::vector<float> &g) { m_Spa.getGraph(g); }
-
-private:
+  
   karto::ScanSolver::IdPoseVector corrections;
 
   sba::SysSPA2d m_Spa;
+  int marker_count_;
+};
 };
 
 #endif // KARTO_SPASOLVER_H
