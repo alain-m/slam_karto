@@ -24,30 +24,30 @@
 
 */
 
-#include "ros/ros.h"
-#include "ros/console.h"
-#include "message_filters/subscriber.h"
-#include "tf/transform_broadcaster.h"
-#include "tf/transform_listener.h"
-#include "tf/message_filter.h"
-#include "visualization_msgs/MarkerArray.h"
-
-#include "nav_msgs/MapMetaData.h"
-#include "sensor_msgs/LaserScan.h"
-#include "nav_msgs/GetMap.h"
-
-#include <open_karto/Mapper.h>
-
-#include <slam_karto/spa_solver.h>
-#include <slam_karto/spa_graph_visualizer.h>
-
-#include <boost/thread.hpp>
-
 #include <string>
 #include <map>
 #include <vector>
 
+#include <boost/thread.hpp>
+
+#include <ros/ros.h>
+#include <ros/console.h>
+#include <message_filters/subscriber.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
+#include <tf/message_filter.h>
+#include <visualization_msgs/MarkerArray.h>
+
+#include <nav_msgs/MapMetaData.h>
+#include <sensor_msgs/LaserScan.h>
+#include <nav_msgs/GetMap.h>
+
+#include <open_karto/Mapper.h>
+
 #include <pluginlib/class_loader.h>
+
+#include "slam_karto/spa_solver.h"
+#include "slam_karto/spa_graph_visualizer.h"
 
 // compute linear index for given map coords
 #define MAP_IDX(sx, i, j) ((sx) * (j) + (i))
@@ -703,7 +703,7 @@ SlamKarto::mapCallback(nav_msgs::GetMap::Request  &req,
 void
 SlamKarto::visLoop(double vis_publish_period)
 {
-  if (vis_publish_period == 0)
+  if (vis_publish_period == 0.0)
     return;
 
   ros::Rate r(1.0 / vis_publish_period);

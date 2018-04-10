@@ -7,13 +7,13 @@ find_package(catkin REQUIRED
     message_filters
     nav_msgs
     open_karto
+    pluginlib
     rosconsole
     roscpp
     sensor_msgs
     sparse_bundle_adjustment
     tf
     visualization_msgs
-    pluginlib
 )
 find_package(Eigen REQUIRED)
 

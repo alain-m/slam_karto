@@ -1,18 +1,23 @@
-#include <slam_karto/spa_graph_visualizer.h>
-#include "ros/console.h"
+#include "slam_karto/spa_graph_visualizer.h"
+
+#include <ros/console.h>
 #include <pluginlib/class_list_macros.h>
 
-namespace karto_plugins{
+namespace karto_plugins {
 
-SPAGraphVisualizer::SPAGraphVisualizer():marker_count_(0),visualizer_initialized_(false)
+SPAGraphVisualizer::SPAGraphVisualizer()
+    : marker_count_(0),
+      visualizer_initialized_(false)
 {
 }
 
 void SPAGraphVisualizer::initialize(const boost::shared_ptr<karto::ScanSolver>& solver)
 {
-  solver_ = boost::dynamic_pointer_cast < karto_plugins::SPASolver > (solver);
+  solver_ = boost::dynamic_pointer_cast<karto_plugins::SPASolver>(solver);
   if (solver_ == NULL) {
-    ROS_ERROR("Could not initialize SPAGraphVisualizer. Check specified solver, this visualizer is only compatible with the SPA solver.");
+    ROS_ERROR("Could not initialize SPAGraphVisualizer. "
+              "Check specified solver, this visualizer is"
+              " only compatible with the SPA solver.");
     return;
   }
   visualizer_initialized_ = true;
@@ -21,7 +26,9 @@ void SPAGraphVisualizer::initialize(const boost::shared_ptr<karto::ScanSolver>& 
 visualization_msgs::MarkerArray SPAGraphVisualizer::createVisualizationMarkers()
 {
   if(!visualizer_initialized_)
+  {
     return visualization_msgs::MarkerArray();
+  }
 
   visualization_msgs::MarkerArray marray;
   std::vector<float> graph;
@@ -62,7 +69,7 @@ visualization_msgs::MarkerArray SPAGraphVisualizer::createVisualizationMarkers()
 
   m.action = visualization_msgs::Marker::ADD;
   uint id = 0;
-  for (uint i=0; i<graph.size()/2; i++)
+  for (size_t i = 0; i < graph.size() / 2; i++)
   {
     m.id = id;
     m.pose.position.x = graph[2*i];
@@ -70,7 +77,7 @@ visualization_msgs::MarkerArray SPAGraphVisualizer::createVisualizationMarkers()
     marray.markers.push_back(visualization_msgs::Marker(m));
     id++;
 
-    if(i>0)
+    if (i > 0)
     {
       edge.points.clear();
 
